@@ -1,0 +1,51 @@
+################
+## Script to report disk space and email.
+##
+## To set your devices to check you can either:
+## Place your device names in to an array
+## or
+## List your device names in a txt file and pull the names.
+## Examples of both are below.
+##
+## Josh Angel - 2014
+################
+
+$Host.ui.RawUI.WindowTitle = "Server Disk Space - Josh 2014."
+$devicelist = @("Server1",
+"Server2",
+"Server3",
+"Server4") #Add your host names addresses here
+#$devicelist = Get-Content "C:\devicelist.txt" # Replace with file which contains Name of Computers
+$destination = "C:\Scripts\OutputData\Server Disk space Logs"
+[System.IO.Directory]::CreateDirectory("$destination")
+$Log = ("$destination\Disk space report.log")
+if (Test-Path $log) {Remove-Item $Log}
+
+# Start function
+foreach ($device in $devicelist)
+{
+Get-WmiObject win32_logicaldisk -ComputerName $device -Filter "Drivetype=3" |
+Format-Table SystemName,DeviceID,VolumeName,@{Label="Total Size";Expression={$_.Size / 1gb -as [int] }},@{Label="Free Space";Expression={$_.freespace / 1gb -as [int] }} -autosize >> $Log
+}
+# End function
+
+#Email starts
+$smtpServer = "exchange.YourDomain.local"
+$att = new-object Net.Mail.Attachment($Log)
+$msg = new-object Net.Mail.MailMessage
+$smtp = new-object Net.Mail.SmtpClient($smtpServer)
+$msg.From = "Device.Monitor@YourDomain.co.nz"
+$msg.To.Add("User1@YourDomain.co.nz.")
+$msg.To.Add("User2@YourDomain.co.nz")
+$msg.Subject = "Report: Server storage."
+$msg.Body = "Server disk space report: Successful. Attached results"
+$msg.Attachments.Add($att)
+$smtp.Send($msg)
+# End Email
+# Remove attachment from the RAM.
+$att.Dispose() #>
+
+# Move / Archive and datestamp the log file.
+Move-Item "$Log" ("$destination\Server Diskspace logs {0:dd-MM-yyyy hh.mm}.log" -f (get-date))
+# Confirmation popup.
+(new-object -ComObject wscript.shell).Popup("Operation Completed. Report sent to defined users.",0,"Disk space report")
