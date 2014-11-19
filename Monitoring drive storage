@@ -49,3 +49,4 @@ $att.Dispose() #>
 Move-Item "$Log" ("$destination\Server Diskspace logs {0:dd-MM-yyyy hh.mm}.log" -f (get-date))
 # Confirmation popup.
 (new-object -ComObject wscript.shell).Popup("Operation Completed. Report sent to defined users.",0,"Disk space report")
+#End
