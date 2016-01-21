@@ -14,7 +14,7 @@
 .PARAMETER <SMTP>
     Your SMTP server address.
 .OUTPUTS
-  Log file stored in C:\Scripts\OutputData\Server Diskspace {0:dd-MM-yyyy hh.mm}.log>
+  Log file stored in C:\Scripts\OutputData\UnlicencedUsers {0:dd-MM-yyyy hh.mm}.log unless changed.
 .NOTES
   Version:        1.0
   Author:         Josh Angel
