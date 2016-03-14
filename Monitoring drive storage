@@ -1,52 +1,94 @@
-################
-## Script to report disk space and email.
-##
-## To set your devices to check you can either:
-## Place your device names in to an array
-## or
-## List your device names in a txt file and pull the names.
-## Examples of both are below.
-##
-## Josh Angel - 2014
-################
-
+#requires -version 2
+<#
+.SYNOPSIS
+Script to report disk space, emailing and archiving log results.
+.DESCRIPTION
+This script can be used to monitor the free space on windows OS's on your network. The script with pull disk information from a host and
+display the output in text format. This file is then mailed to defined users and archived. The archived files are cleaned up after a
+defined period of time.
+.PARAMETER <devicelist>
+Add desired host names for servers into the $devicelist array. IP address should also work is the host name is unknown. You can also
+list your device names in a txt file and pull the names. Examples of both below.
+.PARAMETER <destination>
+Desired store of generated logs.
+.PARAMETER <smtpServer>
+Your SMTP server address.
+.PARAMETER <Daysback>
+Defined period to purge old log files (use negative integer).
+.OUTPUTS
+Log file stored in C:\Scripts\OutputData\Server Diskspace {0:dd-MM-yyyy hh.mm}.log>
+.NOTES
+Version: 1.6
+Author: Josh Angel
+Creation Date: 2014
+Last Edit: 2/3/2015
+Purpose/Change: Additional function to purge archive logs,
+ 
+ 
+.EXAMPLE
+SystemName DeviceID VolumeName Total Size Free Space
+---------- -------- ---------- ---------- ----------
+DomainServer C: Windows 100 53
+#>
+#----------------------------------------------------------[Declarations]----------------------------------------------------------
 $Host.ui.RawUI.WindowTitle = "Server Disk Space - Josh 2014."
-$devicelist = @("Server1",
-"Server2",
-"Server3",
-"Server4") #Add your host names addresses here
+$devicelist = @("dc-primary",
+"dc-primary2k8",
+"dc-secondary2k8",
+"casper",
+"papercut",
+"clickview",
+"stcc-vcenter",
+"stcc-be12",
+"stcc-be14",
+"stcc-exchange",
+"rds.stcuthberts.school.nz") #Add your host names here
 #$devicelist = Get-Content "C:\devicelist.txt" # Replace with file which contains Name of Computers
 $destination = "C:\Scripts\OutputData\Server Disk space Logs"
-[System.IO.Directory]::CreateDirectory("$destination")
-$Log = ("$destination\Disk space report.log")
-if (Test-Path $log) {Remove-Item $Log}
-
-# Start function
+$smtpServer = "stcc-exchange.stcuthberts.local"
+$Daysback = "-90"
+#-----------------------------------------------------------[Functions]------------------------------------------------------------
+Function SpaceGrab {
 foreach ($device in $devicelist)
 {
 Get-WmiObject win32_logicaldisk -ComputerName $device -Filter "Drivetype=3" |
 Format-Table SystemName,DeviceID,VolumeName,@{Label="Total Size";Expression={$_.Size / 1gb -as [int] }},@{Label="Free Space";Expression={$_.freespace / 1gb -as [int] }} -autosize >> $Log
-}
-# End function
-
-#Email starts
-$smtpServer = "exchange.YourDomain.local"
+} }
+Function Email {
 $att = new-object Net.Mail.Attachment($Log)
 $msg = new-object Net.Mail.MailMessage
 $smtp = new-object Net.Mail.SmtpClient($smtpServer)
-$msg.From = "Device.Monitor@YourDomain.co.nz"
-$msg.To.Add("User1@YourDomain.co.nz.")
-$msg.To.Add("User2@YourDomain.co.nz")
+$msg.From = "Device.Monitor@stcuthberts.school.nz"
+$msg.To.Add("josh@stcuthberts.school.nz.")
+#$msg.To.Add("helpdesk@stcuthberts.school.nz")
 $msg.Subject = "Report: Server storage."
-$msg.Body = "Server disk space report: Successful. Attached results"
+$msg.Body = "Server disk space report: Results attached, log created."
 $msg.Attachments.Add($att)
 $smtp.Send($msg)
 # End Email
 # Remove attachment from the RAM.
 $att.Dispose() #>
-
+}
+Function CreateLog {
 # Move / Archive and datestamp the log file.
-Move-Item "$Log" ("$destination\Server Diskspace logs {0:dd-MM-yyyy hh.mm}.log" -f (get-date))
-# Confirmation popup.
-(new-object -ComObject wscript.shell).Popup("Operation Completed. Report sent to defined users.",0,"Disk space report")
+Move-Item "$Log" ("$destination\Server Diskspace {0:dd-MM-yyyy hh.mm}.log" -f (get-date))
+}
+Function LogPurge {
+# Delete all logs older than x day(s)
+$CurrentDate = Get-Date
+$DatetoDelete = $CurrentDate.AddDays($Daysback)
+Get-ChildItem $destination | Where-Object { $_.LastWriteTime -lt $DatetoDelete } | Remove-Item
+}
+#-----------------------------------------------------------[Execution]------------------------------------------------------------
+[System.IO.Directory]::CreateDirectory("$destination")
+$Log = ("$destination\Disk space report.log")
+if (Test-Path $log) {Remove-Item $Log}
+#Run functions
+SpaceGrab
+Email
+CreateLog
+LogPurge
+ 
+# Confirmation popup. (Comment out for scheduled runnning as GUI can break scripts from running without logged on user)
+#(new-object -ComObject wscript.shell).Popup("Operation Completed. Report sent to defined users.",0,"Disk space report")
 #End
