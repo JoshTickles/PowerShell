@@ -32,20 +32,16 @@ DomainServer C: Windows 100 53
 #>
 #----------------------------------------------------------[Declarations]----------------------------------------------------------
 $Host.ui.RawUI.WindowTitle = "Server Disk Space - Josh 2014."
-$devicelist = @("dc-primary",
-"dc-primary2k8",
-"dc-secondary2k8",
-"casper",
-"papercut",
-"clickview",
-"stcc-vcenter",
-"stcc-be12",
-"stcc-be14",
-"stcc-exchange",
+$devicelist = @("dc-1",
+"dc-2",
+"dc-3",
+"be12",
+"be14",
+"exchange",
 "rds.stcuthberts.school.nz") #Add your host names here
 #$devicelist = Get-Content "C:\devicelist.txt" # Replace with file which contains Name of Computers
 $destination = "C:\Scripts\OutputData\Server Disk space Logs"
-$smtpServer = "stcc-exchange.stcuthberts.local"
+$smtpServer = "exchange.local"
 $Daysback = "-90"
 #-----------------------------------------------------------[Functions]------------------------------------------------------------
 Function SpaceGrab {
@@ -58,9 +54,9 @@ Function Email {
 $att = new-object Net.Mail.Attachment($Log)
 $msg = new-object Net.Mail.MailMessage
 $smtp = new-object Net.Mail.SmtpClient($smtpServer)
-$msg.From = "Device.Monitor@stcuthberts.school.nz"
-$msg.To.Add("josh@stcuthberts.school.nz.")
-#$msg.To.Add("helpdesk@stcuthberts.school.nz")
+$msg.From = "Device.Monitor@mail.nz"
+$msg.To.Add("josh@mail.nz")
+#$msg.To.Add("helpdesk@mail.nz")
 $msg.Subject = "Report: Server storage."
 $msg.Body = "Server disk space report: Results attached, log created."
 $msg.Attachments.Add($att)
