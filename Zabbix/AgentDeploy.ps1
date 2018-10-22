@@ -19,7 +19,7 @@
 
 # User defined variables.
 
-$SourceFolder = "\\SHARE\softwaredeployment$\Zabbix"
+$SourceFolder = "\\fs1.mags.school.nz\softwaredeployment$\Zabbix"
 $TargetFolder = "C:\"
 
 # Check if Zabbix Agent is installed and running, if not start the service.
@@ -33,6 +33,11 @@ Elseif (get-service -Name "Zabbix Agent" -ErrorAction SilentlyContinue | Where-O
     Start-Service "Zabbix Agent"
     Exit
 }
+
+#Create FW rule to allow agent communication.
+
+New-NetFirewallRule -DisplayName "Zabbix - Allow TCP 10050" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 10050
+New-NetFirewallRule -DisplayName "Zabbix - Allow TCP 10050" -Direction Outbound -Action Allow -Protocol TCP -LocalPort 10050
 
 # Copy Zabbix Agent folder, Create new service, then start service.
 Copy-Item -Recurse -Path $SourceFolder -Destination $TargetFolder -ErrorAction SilentlyContinue
