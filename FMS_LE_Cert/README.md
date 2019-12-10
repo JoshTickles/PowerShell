@@ -9,6 +9,7 @@ Then forked again fron dansmith65 who made most major changes. This version has 
 * Only supports newer OS (only tested on Windows Server 2019).
 * Only tested on FileMaker Server 18.
 * Installs all dependencies for you.
+* You must follow standard pre-reqs for a LE cert (pubish DNS records / server to internet)
 
 ## Installation
 
