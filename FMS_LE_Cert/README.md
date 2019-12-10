@@ -47,11 +47,11 @@ Then forked again fron dansmith65 who made most major changes. This version has 
 
 4. (Optional) Setup scheduled task to renew the certificate:  
    Will schedule a task to re-occur every 63 days. You can modify this task after it's created by opening Task Scheduler. If you don't do this step, you will have to run the above command to renew the certificate before it expires every 90 days.  
-   Consider configuring [Log File to be Emailed](https://github.com/dansmith65/FileMaker-LetsEncrypt-Win/tree/dev#email-log-file) to you before you running this step.
+   Consider configuring [Log File to be Emailed] to you before you running this step.
 
    ```powershell
    Set-ExecutionPolicy Bypass -Scope Process -Force;
-   & 'C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1' fms.example.com user@email.com -ScheduleTask
+   & 'C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1' fms.example.school.nz TTS@example.school.nz -ScheduleTask
    ```
 
 ## Authentication
@@ -78,7 +78,8 @@ Get-Credential | New-StoredCredential -Target "GetSSL FileMaker Server Admin Con
 
 ## Staging
 
-I won't duplicate what is already said about the `-Staging` parameter in the official help docs but I do want to add to it. Let's Encrypt service imposes [Rate Limits](https://letsencrypt.org/docs/rate-limits/), which are less restrictive on their staging environment. While developing this script (and before I added this parameter) I repeatedly tested with the same domain and quickly hit the limit of 5 identical certificate requests per week. While this won't pertain to most people, I do want to point out that if you are doing testing, you _should_ use the `-Staging` parameter.
+Let's Encrypt service imposes [Rate Limits](https://letsencrypt.org/docs/rate-limits/), which are less restrictive on their staging environment. While developing this script I repeatedly tested with the same domain and quickly hit the limit of 5 identical certificate requests per week. 
+While this won't be an issue to most people, I do want to point out that if you are doing testing, you _should_ use the `-Staging` parameter.
 
 Using this parameter is a great way of doing the initial setup/testing as well. It allows you to go through all the steps without worrying about Rate Limits or your server being restarted. Common issues like permissions to call fmsadmin.exe without having to type a user/pass can be resolved before doing a final install. Since the existing certificate is backed up before being replaced, you could always restore to existing configuration, if needed.
 
