@@ -25,7 +25,7 @@ Then forked again fron dansmith65 who made most major changes. This version has 
 
    ```powershell
    Invoke-WebRequest `
-     -Uri https://raw.githubusercontent.com/dansmith65/FileMaker-LetsEncrypt-Win/master/GetSSL.ps1 `
+     -Uri https://raw.githubusercontent.com/JoshTickles/PowerShell/master/FMS_LE_Cert/GetSSL.ps1 `
      -OutFile "C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1"
    ```
 
