@@ -54,13 +54,14 @@
 	Store credentials and SMTP info so this script can send logs when it runs.
 
 .NOTES
-	File Name:   GetSSL.ps1
-	Author:      Daniel Smith dan@filemaker.consulting
-	Revised:     2019-12-03
-	Version:     2.0.0-alpha4
+	File Name:	        GetSSL.ps1
+	Original Author:        Daniel Smith dan@filemaker.consulting (big props!)
+	Editor / mods for personal use: Josh A - TTS
+	Revised:     		2019-12-12
+	Version:     		2.0.0-alpha6
 
 .LINK
-	https://github.com/dansmith65/FileMaker-LetsEncrypt-Win
+	https://github.com/JoshTickles/PowerShell/tree/master/FMS_LE_Cert
 
 .LINK
 	http://bluefeathergroup.com/blog/how-to-use-lets-encrypt-ssl-certificates-with-filemaker-server/
