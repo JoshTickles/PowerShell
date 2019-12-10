@@ -1,10 +1,8 @@
 ## Credit
 
-This is a fork of the work started by: [David Nahodyl, Blue Feather](http://bluefeathergroup.com/blog/how-to-use-lets-encrypt-ssl-certificates-with-filemaker-server/)  
+This is a original fork of the work started by: [David Nahodyl, Blue Feather](http://bluefeathergroup.com/blog/how-to-use-lets-encrypt-ssl-certificates-with-filemaker-server/)  
 
-Thanks for figuring out the hard part David!
-
-Then forked again fron dansmith65 who made most major changes. This version has been modified for my own personal use at clients using FMS with a particular database.
+Then forked again fron dansmith65 who made most major changes. This version has been modified for my own personal use at clients using FMS with a particular database (KAMAR).
 
 ## Notes
 
@@ -37,7 +35,7 @@ Then forked again fron dansmith65 who made most major changes. This version has 
    ```
 
 4. Get your first Certificate:  
-   You **should** read this file completely (all below) before continuing. If you like to live dangerously and you have FileMaker Server installed in the default directory you can run this command after replacing `fms.example.com` and `user@email.com` with your own.  
+   You **should** read this file completely (all below) before continuing. If you like to live dangerously and you have FileMaker Server installed in the default directory you can run this command after replacing `fms.example.school.nz` and `TTS@example.school.nz` with your own.  
    Consider adding the `-Staging` parameter when first configuring this script, so you can verify there are no permissions or config issues before using Let's Encrypt production server, or restarting FileMaker server.
 
    ```powershell
