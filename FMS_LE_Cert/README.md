@@ -4,13 +4,13 @@ This is a fork of the work started by: [David Nahodyl, Blue Feather](http://blue
 
 Thanks for figuring out the hard part David!
 
+Then forked again fron dansmith65 who made most major changes. This version has been modified for my own personal use at clients using FMS with a particular database.
 
 ## Notes
 
-* Only supports newer OS (only tested on Windows Server 2016).
+* Only supports newer OS (only tested on Windows Server 2019).
 * Only tested on FileMaker Server 18.
 * Installs all dependencies for you.
-
 
 ## Installation
 
@@ -37,12 +37,12 @@ Thanks for figuring out the hard part David!
    ```
 
 4. Get your first Certificate:  
-   You **should** read the Docs first (see below). If you like to live dangerously and you have FileMaker Server installed in the default directory you can run this command after replacing `fms.example.com` and `user@email.com` with your own.  
+   You **should** read this file completely (all below) before continuing. If you like to live dangerously and you have FileMaker Server installed in the default directory you can run this command after replacing `fms.example.com` and `user@email.com` with your own.  
    Consider adding the `-Staging` parameter when first configuring this script, so you can verify there are no permissions or config issues before using Let's Encrypt production server, or restarting FileMaker server.
 
    ```powershell
    Set-ExecutionPolicy Bypass -Scope Process -Force;
-   & 'C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1' fms.example.com user@email.com
+   & 'C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1' fms.example.school.nz TTS@example.school.nz
    ```
 
 4. (Optional) Setup scheduled task to renew the certificate:  
@@ -54,22 +54,6 @@ Thanks for figuring out the hard part David!
    & 'C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1' fms.example.com user@email.com -ScheduleTask
    ```
 
-#TODO: record this somewhere: Once -Setup has been run, you likely never have to specify domain/email again unless you want to change it, or change between staging and production. Instead, just call script with -Renew parameter and it will use the last values entered.
-#TODO: mention InstallCertificate, which can be used when `get-pacertificate`? returns a valid cert, like when the certificate was downloaded, but the script failed to install it
-
-
-## Documentation
-
-If you view the [GetSSL.ps1](GetSSL.ps1) file as text; the documentation is in comments at the top of the file.
-
-To view it the "PowerShell Way", you can use Get-Help like:
-
-```powershell
-Get-Help .\GetSSL.ps1 -full
-```
-
-
-
 ## Authentication
 
 This script will seamlessly and securely manage authentication for you. If external authentication is setup for the user the script is run as to access the Admin Console, then that will be used. If it's not, you will be asked for your Admin Console Sign In when the script runs. These credentials will be stored in Windows Credential Manager; the same place FileMaker Server stores your encryption at rest password. The next time the script runs, it will load the stored credentials from Credential Manager.
@@ -78,7 +62,7 @@ I haven't tested this scenario but the credentials can probably only be retrieve
 
 If you want to, external authentication can easily be enabled on a default installation of FileMaker Server and does not require an Active Directory:
 
-1. Log in to FileMaker Server 17 admin console
+1. Log in to FileMaker Server 18 admin console
 2. Administration > External Athentication > External Accounts for Admin Console Sign In: click __Change__
 3. Add a group name and click __Save Authentication Settings__  
    (default install of Windows should work with "Administrators" as the group name)
@@ -86,20 +70,17 @@ If you want to, external authentication can easily be enabled on a default insta
 5. Confirm it's working by typing this on the command line: `fmsadmin list files`. If you are not asked for a user/pass, then it has be properly enabled.
 
 If external authentication _is_ enabled but you _don't_ want to use it, you can store credentials with this command:
+**NOTE - THIS IS STRONGLY DISCOURAGED BY TTS / MYSELF.**
 
 ```powershell
 Get-Credential | New-StoredCredential -Target "GetSSL FileMaker Server Admin Console" -Persist LocalMachine
 ```
-
-
 
 ## Staging
 
 I won't duplicate what is already said about the `-Staging` parameter in the official help docs but I do want to add to it. Let's Encrypt service imposes [Rate Limits](https://letsencrypt.org/docs/rate-limits/), which are less restrictive on their staging environment. While developing this script (and before I added this parameter) I repeatedly tested with the same domain and quickly hit the limit of 5 identical certificate requests per week. While this won't pertain to most people, I do want to point out that if you are doing testing, you _should_ use the `-Staging` parameter.
 
 Using this parameter is a great way of doing the initial setup/testing as well. It allows you to go through all the steps without worrying about Rate Limits or your server being restarted. Common issues like permissions to call fmsadmin.exe without having to type a user/pass can be resolved before doing a final install. Since the existing certificate is backed up before being replaced, you could always restore to existing configuration, if needed.
-
-
 
 ## Restoring a Certificate
 
@@ -114,18 +95,14 @@ fmsadmin certificate import `
 
 _Make sure to use the actual path to the backup you want to restore; this code is an example for a backup taken at the time of writing this documentation._
 
-
-
 ## Multiple Domains
 
 You can request a certificate for multiple domains at once by separating them with commas:
 
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force;
-& 'C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1' example.com, www.example.com, fms.example.com user@email.com
+& 'C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1' example.school.nz, FMS.example.school.nz, KAMAR.example.school.nz user@email.com
 ```
-
-
 
 ## Custom Shutdown/Startup
 
