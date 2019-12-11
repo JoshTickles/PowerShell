@@ -384,7 +384,7 @@ function Install-Cert {
 			Write-Output "no files open"
 		}
 		Write-Output "now stop server"
-		Invoke-FMSAdmin stop, server, -y, -t, 60
+		Invoke-FMSAdmin stop, server, -y, -t, 120
 		#TODO: 10002 error code here means Event timed out, which I'm getting every time on my test server; should I ignore that?
 		$mustStartServer = $True #TODO: use this in catch, or finally block to determine if server should be started?
 	}
