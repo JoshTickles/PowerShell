@@ -11,14 +11,11 @@ Then forked again fron dansmith65 who made most major changes. This version has 
 * Installs all dependencies for you.
 * You must follow standard pre-reqs for a LE cert (pubish DNS records / server to internet)
 
+Ask nicely if you need support. If you are TTS, find me in slack. 
+
 ## Installation
 
 1. Open PowerShell console as an Administrator:
-
-   1. Click **Start**
-   2. Type **PowerShell**
-   3. Right-click on **Windows PowerShell**
-   4. Click **Run as administrator**
 
 2. Download the `GetSSL.ps1` file to your server:
 
@@ -27,7 +24,7 @@ Then forked again fron dansmith65 who made most major changes. This version has 
      -Uri https://raw.githubusercontent.com/JoshTickles/PowerShell/master/FMS_LE_Cert/GetSSL.ps1 `
      -OutFile "C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1"
    ```
-
+   
 3. Install Dependencies:
 
    ```powershell
@@ -53,7 +50,7 @@ Then forked again fron dansmith65 who made most major changes. This version has 
    & 'C:\Program Files\FileMaker\FileMaker Server\Data\Scripts\GetSSL.ps1' fms.example.school.nz TTS@example.school.nz -ScheduleTask
    ```
 
-## Authentication
+## Auth
 
 This script will seamlessly and securely manage authentication for you. If external authentication is setup for the user the script is run as to access the Admin Console, then that will be used. If it's not, you will be asked for your Admin Console Sign In when the script runs. These credentials will be stored in Windows Credential Manager; the same place FileMaker Server stores your encryption at rest password. The next time the script runs, it will load the stored credentials from Credential Manager.
 
