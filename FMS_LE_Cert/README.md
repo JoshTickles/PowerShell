@@ -13,6 +13,10 @@ Then forked again fron dansmith65 who made most major changes. This version has 
 
 Ask nicely if you need support. If you are TTS, find me in slack. 
 
+USE AT YOUR OWN RISK ----
+I am not responsible for your data should this script fail, and cause data loss, your server to implode, your hair to catch fire, etc. 
+Any support given by myself is done so in good faith, though I may not be able to support everything you are trying to achieve. 
+
 ## Installation
 
 1. Open PowerShell console as an Administrator:
