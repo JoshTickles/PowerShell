@@ -21,8 +21,8 @@ $json = Get-Content -Raw .\upload\*.json | ConvertFrom-Json
 
 ## Set SIS ID and School name
 
-$sisid = 'MAGS'
-$schoolname = 'Mount Albert Grammer'
+$sisid = 'SIS-GOES-HERE'
+$schoolname = 'CLIENT-NAME-HERE'
 
 ## Set Year
 
