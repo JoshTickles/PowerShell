@@ -16,6 +16,6 @@ $ZipFileName = "sds-export.zip"
 
 $CreateZip = Compress-Archive -Update -Path $LogSource\*.* -DestinationPath .\$ZipFileName
 
-Send-MailMessage -From 'SDS Export <sds-export@trinityschools.nz>' -To 'Josh Angel <josh.angel@mags.school.nz>' -Subject 'SDS Export' -Body "Daily SDS Export From Kamar" -Attachments .\sds-export.zip -Priority High -DeliveryNotificationOption OnSuccess, OnFailure -SmtpServer 'relay.n4l.co.nz'
+Send-MailMessage -From 'SDS Export <sds-export@domain.com>' -To 'Josh <josh@domain.com>' -Subject 'SDS Export' -Body "Daily SDS Export From Kamar" -Attachments .\sds-export.zip -Priority High -DeliveryNotificationOption OnSuccess, OnFailure -SmtpServer 'relay.domain.com'
 
 Remove-Item .\sds-export.zip
